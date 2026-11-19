@@ -1,0 +1,518 @@
+/* =========================================================================
+   Social Media Phishing Detection — Design System
+   Theme: "Signal Scanner" — a light, clean security-console aesthetic that
+   evokes a live message scanner rather than a generic gradient SaaS page.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Palette (light theme) */
+  --bg: #F3F8FB;
+  --bg-panel: #FFFFFF;
+  --bg-panel-raised: #F6FAFC;
+  --line: #D9E4EC;
+  --line-soft: #E6EEF4;
+
+  --text: #1B2733;
+  --text-muted: #55657A;
+  --text-faint: #7C8CA0;
+
+  --accent: #0D9488;        /* signal teal */
+  --accent-soft: rgba(13, 148, 136, 0.10);
+  --accent-strong: #0F766E;
+
+  --danger: #DC2626;        /* phishing */
+  --danger-soft: rgba(220, 38, 38, 0.08);
+  --danger-strong: #B91C1C;
+
+  --safe: #16A34A;          /* legitimate */
+  --safe-soft: rgba(22, 163, 74, 0.09);
+  --safe-strong: #15803D;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% -10%, rgba(125, 211, 252, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(167, 243, 208, 0.35), transparent 40%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* Focus visibility for keyboard users */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* -------------------------------------------------------------------------
+   Header / eyebrow
+   ------------------------------------------------------------------------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+h1.title {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+h1.title .accent-word {
+  color: var(--accent);
+}
+
+p.subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 56ch;
+  margin: 0 0 36px;
+}
+
+/* -------------------------------------------------------------------------
+   Scan card — the signature element. A console-style panel with a
+   sweeping scan-line animation along the top border to evoke a live
+   security scan in progress.
+   ------------------------------------------------------------------------- */
+.scan-card {
+  position: relative;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -30px rgba(30, 64, 100, 0.25);
+}
+
+.scan-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: scan-sweep 3.2s linear infinite;
+}
+
+@keyframes scan-sweep {
+  0%   { left: -30%; }
+  100% { left: 100%; }
+}
+
+.scan-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.scan-card-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.window-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.window-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+textarea#message {
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  line-height: 1.6;
+  padding: 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+textarea#message::placeholder {
+  color: var(--text-faint);
+}
+
+textarea#message:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.helper-text {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+/* -------------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------------- */
+.btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 26px;
+  border-radius: var(--radius-sm);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px -8px rgba(13, 148, 136, 0.40);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 28px -6px rgba(13, 148, 136, 0.50);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Example chips
+   ------------------------------------------------------------------------- */
+.examples-section {
+  margin-top: 40px;
+}
+
+.examples-heading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 12px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+
+.chip.chip-danger:hover {
+  border-color: var(--danger);
+  color: var(--danger-strong);
+  background: var(--danger-soft);
+}
+
+.chip.chip-safe:hover {
+  border-color: var(--safe);
+  color: var(--safe-strong);
+  background: var(--safe-soft);
+}
+
+/* -------------------------------------------------------------------------
+   Alerts (form errors / model-not-loaded)
+   ------------------------------------------------------------------------- */
+.alert {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  border: 1px solid rgba(220, 38, 38, 0.30);
+  background: var(--danger-soft);
+  color: var(--danger-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Result page
+   ------------------------------------------------------------------------- */
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+}
+
+.result-badge.is-phishing {
+  background: var(--danger-soft);
+  color: var(--danger-strong);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+}
+
+.result-badge.is-safe {
+  background: var(--safe-soft);
+  color: var(--safe-strong);
+  border: 1px solid rgba(22, 163, 74, 0.35);
+}
+
+.result-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.is-phishing .result-icon { background: var(--danger); }
+.is-safe .result-icon { background: var(--safe); }
+
+.result-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.result-card.emphasis-danger {
+  border-color: rgba(220, 38, 38, 0.30);
+  box-shadow: 0 20px 60px -32px rgba(220, 38, 38, 0.30);
+}
+
+.result-card.emphasis-safe {
+  border-color: rgba(22, 163, 74, 0.30);
+  box-shadow: 0 20px 60px -32px rgba(22, 163, 74, 0.30);
+}
+
+.result-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+
+.result-message {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.confidence-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.confidence-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bg-panel-raised);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.confidence-fill.fill-danger { background: linear-gradient(90deg, #F87171, var(--danger)); }
+.confidence-fill.fill-safe { background: linear-gradient(90deg, #4ADE80, var(--safe)); }
+
+.confidence-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 56px;
+  text-align: right;
+}
+
+.warning-panel {
+  display: flex;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  margin-top: 22px;
+  align-items: flex-start;
+}
+
+.warning-panel.danger {
+  background: var(--danger-soft);
+  border: 1px solid rgba(220, 38, 38, 0.28);
+}
+
+.warning-panel.safe {
+  background: var(--safe-soft);
+  border: 1px solid rgba(22, 163, 74, 0.28);
+}
+
+.warning-panel .icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.warning-panel h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+
+.warning-panel.danger h3 { color: var(--danger-strong); }
+.warning-panel.safe h3 { color: var(--safe-strong); }
+
+.warning-panel p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* -------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------- */
+footer.page-footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* -------------------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------------------- */
+@media (max-width: 560px) {
+  .wrap { padding: 32px 16px 60px; }
+  .scan-card { padding: 20px; }
+  .form-footer { flex-direction: column; align-items: stretch; }
+  .btn-primary { width: 100%; }
+  footer.page-footer { flex-direction: column; }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan Result — AI-Powered-Email-Impersonation-Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="wrap">
+
+    <span class="eyebrow"><span class="dot"></span> Scan complete</span>
+
+    <h1 class="title">
+      {% if is_phishing %}
+        This looks like a <span class="accent-word" style="color:var(--danger-strong)">phishing</span> message.
+      {% else %}
+        This message looks <span class="accent-word" style="color:var(--safe-strong)">legitimate</span>.
+      {% endif %}
+    </h1>
+
+    <div class="result-badge {{ 'is-phishing' if is_phishing else 'is-safe' }}">
+      <span class="result-icon"></span>
+      {{ label }}
+    </div>
+
+    <div class="result-card {{ 'emphasis-danger' if is_phishing else 'emphasis-safe' }}">
+      <div class="result-label">Analyzed message</div>
+      <div class="result-message">{{ message }}</div>
+
+      <div class="confidence-row">
+        <div class="confidence-track">
+          <div
+            class="confidence-fill {{ 'fill-danger' if is_phishing else 'fill-safe' }}"
+            style="width: {{ confidence }}%;"
+          ></div>
+        </div>
+        <div class="confidence-value">{{ confidence }}%</div>
+      </div>
+
+      {% if is_phishing %}
+        <div class="warning-panel danger">
+          <span class="icon">⚠</span>
+          <div>
+            <h3>Do not click links or reply with personal info</h3>
+            <p>
+              This message shares patterns with known phishing attempts —
+              urgency, account threats, or requests to click a link or
+              log in. Verify through the app or website directly instead
+              of any link in this message.
+            </p>
+          </div>
+        </div>
+      {% else %}
+        <div class="warning-panel safe">
+          <span class="icon">✓</span>
+          <div>
+            <h3>No phishing indicators detected</h3>
+            <p>
+              This message reads like a normal, legitimate conversation.
+              Stay cautious with any message that asks for passwords,
+              OTPs, or payment details, regardless of the score.
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="result-actions">
+      <a href="/" class="btn btn-primary">Scan another message</a>
+    </div>
+
+    <footer class="page-footer">
+      <span>B.Tech AI &amp; ML · PBL Project</span>
+      <span>TF-IDF + Logistic Regression</span>
+    </footer>
+  </div>
+</body>
+</html>

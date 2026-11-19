@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-Powered-Email-Impersonation-Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="wrap">
+
+    <span class="eyebrow"><span class="dot"></span> Live message scanner</span>
+
+    <h1 class="title">Catch phishing emails<br />before they catch <span class="accent-word">you</span>.</h1>
+    <p class="subtitle">
+      Paste any raw emails you received on Gmail, Outlook,Yahoo, ProtonMail.
+      A logistic regression model trained on TF-IDF text
+      features scores it as <strong>phishing</strong> or <strong>legitimate</strong>
+      in real time.
+    </p>
+
+    {% if error %}
+      <div class="alert">⚠ {{ error }}</div>
+    {% endif %}
+
+    {% if not model_loaded %}
+      <div class="alert">
+        ⚠ Model artifacts not found. Please run <code>python train_model.py</code>
+        first, then restart the app.
+      </div>
+    {% endif %}
+
+    <form action="/predict" method="POST">
+      <div class="scan-card">
+        <div class="scan-card-header">
+          <span class="scan-card-label">// input_message.txt</span>
+          <span class="window-dots"><span></span><span></span><span></span></span>
+        </div>
+
+        <textarea
+          id="message"
+          name="message"
+          placeholder="e.g. Your account will be suspended in 24 hours. Verify now: bit.ly/secure-login"
+          required
+        >{{ request.form.get('message', '') if request else '' }}</textarea>
+
+        <div class="form-footer">
+          <span class="helper-text">Runs locally · nothing is stored</span>
+          <button type="submit" class="btn btn-primary">Detect message</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="examples-section">
+      <div class="examples-heading">Try a phishing example</div>
+      <div class="chip-row">
+        {% for example in phishing_examples %}
+          <span class="chip chip-danger" onclick="fillMessage(this)">{{ example }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="examples-heading">Try a legitimate example</div>
+      <div class="chip-row">
+        {% for example in legitimate_examples %}
+          <span class="chip chip-safe" onclick="fillMessage(this)">{{ example }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <span>B.Tech AI &amp; ML · PBL Project</span>
+      <span>TF-IDF + Logistic Regression</span>
+    </footer>
+  </div>
+
+  <script>
+    function fillMessage(el) {
+      const textarea = document.getElementById('message');
+      textarea.value = el.textContent.trim();
+      textarea.focus();
+    }
+  </script>
+</body>
+</html>
